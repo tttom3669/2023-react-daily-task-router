@@ -1,8 +1,18 @@
 import './App.css';
-import { useNavigate } from 'react-router-dom';
-import { HashRouter, NavLink } from 'react-router-dom';
-import { Route } from 'react-router-dom';
-import { Routes } from 'react-router-dom';
+import {
+  HashRouter,
+  NavLink,
+  Link,
+  useNavigate,
+  Outlet,
+  Route,
+  Routes,
+  useParams,
+} from 'react-router-dom';
+
+// 在 App.js 設定路由一個 Post 的巢狀路由，有父層 /post 路由以及子動態路由 /:postId
+// 定義 Post 和 PostId 兩個元件，分別會看到 Post 詳細資料頁面、點入 /:postId 路由會顯示 Post ID 是 xxxx。
+// 加上 NavLink，讓使用者可以直接點擊查看這些頁面。
 
 const Home = () => {
   return <p>這是首頁</p>;
@@ -36,7 +46,20 @@ const Logout = () => {
     </button>
   );
 };
-
+const Post = () => {
+  return (
+    <>
+      <p>Post 詳細頁面</p>
+      <Link to="post123">post 123連結</Link>
+      <Link to="post246">post 246連結</Link>
+      <Outlet />
+    </>
+  );
+};
+const PostId = () => {
+  const params = useParams();
+  return <p>PostId: {params.postId}</p>;
+};
 function App() {
   return (
     <div className="container">
@@ -54,6 +77,9 @@ function App() {
           <NavLink to="/todo">
             <p>Todo 頁面</p>
           </NavLink>
+          <NavLink to="/post">
+            <p>Post 詳細頁面</p>
+          </NavLink>
         </div>
         {/* Routes, Route 練習區 */}
         <Routes>
@@ -61,6 +87,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/todo" element={<Todo />} />
+          <Route path="/post" element={<Post />}>
+            <Route path=":postId" element={<PostId />} />
+          </Route>
         </Routes>
         {/* 練習區 */}
       </HashRouter>
